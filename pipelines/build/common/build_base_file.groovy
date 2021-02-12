@@ -73,7 +73,9 @@ class Builder implements Serializable {
         'extended.system',
         'sanity.perf',
         'sanity.functional',
-        'extended.functional'
+        'extended.functional',
+        'sanity.jck',
+        'special.system'
     ]
 
     /*
@@ -84,7 +86,8 @@ class Builder implements Serializable {
         'extended.openjdk',
         'extended.perf',
         'special.functional',
-        'sanity.external'
+        'sanity.external',
+        'sanity.jck'
     ]
 
     // Declare timeouts for each critical stage (unit is HOURS)
@@ -158,7 +161,7 @@ class Builder implements Serializable {
             TEST_LIST: testList,
             SCM_REF: scmReference,
             BUILD_ARGS: buildArgs,
-            NODE_LABEL: "${additionalNodeLabels}&&${platformConfig.os}&&${archLabel}",
+            NODE_LABEL: "${additionalNodeLabels}",
             ADDITIONAL_TEST_LABEL: "${additionalTestLabels}",
             KEEP_TEST_REPORTDIR: keepTestReportDir,
             ACTIVE_NODE_TIMEOUT: activeNodeTimeout,
@@ -382,7 +385,7 @@ class Builder implements Serializable {
     This builds up a node param string that defines what nodes are eligible to run the given job.
     */
     def formAdditionalBuildNodeLabels(Map<String, ?> configuration, String variant) {
-        def buildTag = "build"
+        def buildTag = "ci.role.build.release && ci.project.openj9"
         def labels = "${buildTag}"
 
         if (configuration.containsKey("additionalNodeLabels")) {

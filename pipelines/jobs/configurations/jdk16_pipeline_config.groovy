@@ -3,11 +3,12 @@ class Config16 {
         x64Mac    : [
                 os                  : 'mac',
                 arch                : 'x64',
-                additionalNodeLabels: 'macos10.14',
+                additionalNodeLabels: 'ci.project.openj9 && hw.arch.x86 && sw.os.osx.10_14',
                 test                : 'default',
+                cleanWorkspaceAfterBuild: true,
                 configureArgs       : '--enable-dtrace'
         ],
-        
+
         x64MacXL    : [
                 os                   : 'mac',
                 arch                 : 'x64',
@@ -20,6 +21,7 @@ class Config16 {
         x64Linux  : [
                 os                  : 'linux',
                 arch                : 'x64',
+                additionalNodeLabels : 'ci.project.openj9 && hw.arch.x86 && sw.os.linux',
                 dockerImage: [
                         hotspot     : 'adoptopenjdk/centos6_build_image',
                         openj9      : 'adoptopenjdk/centos7_build_image'
@@ -27,16 +29,18 @@ class Config16 {
                 dockerFile: [
                         openj9  : 'pipelines/build/dockerFiles/cuda.dockerfile'
                 ],
+                dockerNode          : 'sw.tool.docker && sw.config.uid1000',
                 test                : 'default',
+                cleanWorkspaceAfterBuild: true,
                 additionalTestLabels: [
-                        openj9      : '!(centos6||rhel6)'
+                        openj9      : '!(sw.os.cent.6||sw.os.rhel.6)'
                 ],
                 configureArgs       : [
                         "openj9"      : '--enable-dtrace --enable-jitserver',
                         "hotspot"     : '--enable-dtrace'
                 ]
         ],
-        
+
         x64LinuxXL  : [
                 os                   : 'linux',
                 arch                 : 'x64',
@@ -67,10 +71,11 @@ class Config16 {
         x64Windows: [
                 os                  : 'windows',
                 arch                : 'x64',
-                additionalNodeLabels: 'win2012&&vs2017',
+                additionalNodeLabels: 'ci.project.openj9 && hw.arch.x86 && sw.os.windows',
+                cleanWorkspaceAfterBuild: true,
                 test                : 'default'
         ],
-        
+
         x64WindowsXL: [
                 os                   : 'windows',
                 arch                 : 'x64',
@@ -108,7 +113,7 @@ class Config16 {
                 arch                : 'ppc64',
                 additionalNodeLabels: [
                         hotspot: 'xlc16&&aix710',
-                        openj9:  'xlc16&&aix715'
+                        openj9:  'hw.arch.ppc64 && sw.os.aix.7_1'
                 ],
                 test                : 'default',
                 cleanWorkspaceAfterBuild: true
@@ -119,9 +124,13 @@ class Config16 {
                 os                  : 'linux',
                 arch                : 's390x',
                 test                : 'default',
+                cleanWorkspaceAfterBuild: true,
+                additionalNodeLabels: [
+                        openj9:  'hw.arch.s390x && (sw.os.cent.7 || sw.os.rhel.7)'
+                ],
                 configureArgs       : '--enable-dtrace'
         ],
-        
+
         s390xLinuxXL  : [
                 os                   : 'linux',
                 arch                 : 's390x',
@@ -135,13 +144,17 @@ class Config16 {
                 arch                : 'ppc64le',
                 additionalNodeLabels: 'centos7',
                 test                : 'default',
+                cleanWorkspaceAfterBuild: true,
+                additionalNodeLabels: [
+                        openj9:  'hw.arch.ppc64le && (sw.os.cent.7 || sw.os.rhel.7)'
+                ],
                 configureArgs       : [
                         "hotspot"     : '--enable-dtrace',
                         "openj9"      : '--enable-dtrace --enable-jitserver'
                 ]
 
         ],
-        
+
         ppc64leLinuxXL    : [
                 os                   : 'linux',
                 arch                 : 'ppc64le',
@@ -155,10 +168,18 @@ class Config16 {
                 os                  : 'linux',
                 arch                : 'aarch64',
                 dockerImage         : 'adoptopenjdk/centos7_build_image',
+                dockerNode         : 'sw.tool.docker',
                 test                : 'default',
+                additionalNodeLabels: [
+                        openj9:  'hw.arch.aarch64 && sw.os.linux'
+                ],
+                test                : [
+                        nightly: ['sanity.functional', 'sanity.openjdk']
+                ],
+                cleanWorkspaceAfterBuild: true,
                 configureArgs       : '--enable-dtrace'
         ],
-        
+
         aarch64LinuxXL    : [
                 os                   : 'linux',
                 dockerImage          : 'adoptopenjdk/centos7_build_image',
