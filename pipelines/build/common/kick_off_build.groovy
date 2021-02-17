@@ -49,6 +49,8 @@ node("master") {
       ])
     }
 
+    println "here2 #####################"
+    println ADOPT_DEFAULTS_JSON["repository"]["url"]
     checkout scm
 
     if (params.USER_REMOTE_CONFIGS) {
