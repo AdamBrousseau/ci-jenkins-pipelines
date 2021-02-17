@@ -32,6 +32,7 @@ class Config11 {
                 test                : 'default',
                 configureArgs       : [
                         "openj9"      : '--enable-jitserver --enable-dtrace=auto',
+                        "openj9"      : '--enable-jitserver --enable-dtrace=auto --with-freetype=bundled --without-version-pre --without-version-opt --with-version-build=9 --with-vendor-name="IBM Corporation" --with-vendor-version-string="11.0.10.0-IBM" -with-vendor-url=https://www.ibm.com/ --with-vendor-bug-url=https://www.ibm.com/support/pages/java-sdk-support --with-vendor-vm-bug-url=https://www.ibm.com/support/pages/java-sdk-support --with-jdk-rc-name="IBM Java Platform"',
                         "hotspot"     : '--enable-dtrace=auto',
                         "corretto"    : '--enable-dtrace=auto',
                         "SapMachine"  : '--enable-dtrace=auto',
