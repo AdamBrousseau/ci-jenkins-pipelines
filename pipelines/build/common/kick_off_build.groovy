@@ -41,6 +41,8 @@ node("master") {
     Changes dir to Adopt's pipeline repo. Use closures as functions aren't accepted inside node blocks
     */
     def checkoutAdoptPipelines = { ->
+        println "here 1 #####################"
+        println ADOPT_DEFAULTS_JSON["repository"]["url"]
       checkout([$class: 'GitSCM',
         branches: [ [ name: ADOPT_DEFAULTS_JSON["repository"]["pipeline_branch"] ] ],
         userRemoteConfigs: [ [ url: ADOPT_DEFAULTS_JSON["repository"]["pipeline_url"] ] ]
