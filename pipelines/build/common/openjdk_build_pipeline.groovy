@@ -951,8 +951,10 @@ class Build {
             try {
                 context.timeout(time: buildTimeouts.NODE_CHECKOUT_TIMEOUT, unit: "HOURS") {
                     if (useAdoptShellScripts) {
+                        println "Here 3"
                         repoHandler.checkoutAdoptPipelines()
                     } else {
+                        println "Here 4"
                         repoHandler.checkoutUserPipelines()
                     }
                     // Perform a git clean outside of checkout to avoid the Jenkins enforced 10 minute timeout
@@ -1185,6 +1187,8 @@ class Build {
 
                     if (buildConfig.DOCKER_IMAGE) {
                         // Docker build environment
+                        println buildConfig
+                        println buildConfig.DOCKER_NODE
                         def label = buildConfig.NODE_LABEL + "&&dockerBuild"
                         if (buildConfig.DOCKER_NODE) {
                             label = buildConfig.NODE_LABEL + "&&" + "$buildConfig.DOCKER_NODE"
