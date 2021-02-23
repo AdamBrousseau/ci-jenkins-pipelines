@@ -969,11 +969,13 @@ class Build {
 
             try {
                 // Convert IndividualBuildConfig to jenkins env variables
+                context.println "here 8"
                 List<String> envVars = buildConfig.toEnvVars()
                 envVars.add("FILENAME=${filename}" as String)
 
                 // Add in the adopt platform config path so it can be used if the user doesn't have one
                 def splitAdoptUrl = ((String)ADOPT_DEFAULTS_JSON['repository']['build_url']).minus(".git").split('/')
+                context.println "here 9"
                 // e.g. https://github.com/AdoptOpenJDK/openjdk-build.git will produce AdoptOpenJDK/openjdk-build
                 String userOrgRepo = "${splitAdoptUrl[splitAdoptUrl.size() - 2]}/${splitAdoptUrl[splitAdoptUrl.size() - 1]}"
                 // e.g. AdoptOpenJDK/openjdk-build/master/build-farm/platform-specific-configurations
@@ -984,6 +986,7 @@ class Build {
                     try {
                         context.timeout(time: buildTimeouts.BUILD_JDK_TIMEOUT, unit: "HOURS") {
                             // Set Github Commit Status
+                            context.println "here 10"
                             if (env.JOB_NAME.contains("pr-tester")) {
                                 updateGithubCommitStatus("PENDING", "Build Started")
                             }
@@ -994,6 +997,7 @@ class Build {
                                 context.println "[CHECKOUT] Reverting pre-build AdoptOpenJDK/openjdk-build checkout..."
                                 repoHandler.checkoutUserPipelines()
                             } else {
+                                context.println "here 11"
                                 context.println "[CHECKOUT] Checking out to the user's openjdk-build..."
                                 repoHandler.checkoutUserBuild()
                                 context.sh(script: "./${DEFAULTS_JSON['scriptDirectories']['buildfarm']}")
