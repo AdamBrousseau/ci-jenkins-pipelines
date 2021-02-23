@@ -1002,6 +1002,8 @@ class Build {
                             } else {
                                 context.println "here 11"
                                 context.println "[CHECKOUT] Checking out to the user's openjdk-build..."
+                                context.println repoHandler.class
+                                context.println repoHandler
                                 repoHandler.checkoutUserBuild()
                                 context.sh(script: "./${DEFAULTS_JSON['scriptDirectories']['buildfarm']}")
                                 context.println "[CHECKOUT] Reverting pre-build user openjdk-build checkout..."
