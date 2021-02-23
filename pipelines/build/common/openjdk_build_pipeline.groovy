@@ -971,8 +971,11 @@ class Build {
                 // Convert IndividualBuildConfig to jenkins env variables
                 context.println "here 8"
                 List<String> envVars = buildConfig.toEnvVars()
+                context.println "here 12"
+                context.println "FILENAME=${filename}"
                 envVars.add("FILENAME=${filename}" as String)
-
+                context.println "here 13"
+                context.println "${ADOPT_DEFAULTS_JSON['repository']['build_url']}"
                 // Add in the adopt platform config path so it can be used if the user doesn't have one
                 def splitAdoptUrl = ((String)ADOPT_DEFAULTS_JSON['repository']['build_url']).minus(".git").split('/')
                 context.println "here 9"
