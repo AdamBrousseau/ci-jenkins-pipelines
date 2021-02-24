@@ -91,8 +91,9 @@ class RepoHandler {
     Changes dir to user's openjdk-build repo
     */
     public void checkoutUserBuild () {
-        context.println "branch:${DEFAULTS_JSON["repository"]["build_branch"]}"
-        context.println "url:${DEFAULTS_JSON["repository"]["build_url"]}"
+        println "here 20"
+        println "branch:${USER_DEFAULTS_JSON["repository"]["build_branch"]}"
+        println "url:${USER_DEFAULTS_JSON["repository"]["build_url"]}"
         context.checkout([$class: 'GitSCM',
             branches: [ [ name: USER_DEFAULTS_JSON["repository"]["build_branch"] ] ],
             userRemoteConfigs: [ [ url: USER_DEFAULTS_JSON["repository"]["build_url"] ] ]
