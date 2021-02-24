@@ -174,7 +174,9 @@ class Config11 {
                 os                   : 'linux',
                 dockerImage          : 'adoptopenjdk/centos7_build_image',
                 arch                 : 'aarch64',
-                test                 : 'default',
+                test                : [
+                        nightly: ['sanity.functional', 'sanity.openjdk']
+                ],
                 additionalFileNameTag: "linuxXL",
                 configureArgs        : '--with-noncompressedrefs --enable-dtrace=auto'
         ],
