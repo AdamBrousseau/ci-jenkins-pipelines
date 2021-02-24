@@ -914,8 +914,8 @@ class Build {
     ) {
         context.println "here 16"
         return context.stage("build") {
-            // Create the repo handler with the user's defaults to ensure a openjdk-build checkout is not null
             context.println "here 17"
+            // Create the repo handler with the user's defaults to ensure a openjdk-build checkout is not null
             def repoHandler = new RepoHandler(context, USER_REMOTE_CONFIGS)
             repoHandler.setUserDefaultsJson(context, DEFAULTS_JSON['defaultsUrl'])
             if (cleanWorkspace) {
