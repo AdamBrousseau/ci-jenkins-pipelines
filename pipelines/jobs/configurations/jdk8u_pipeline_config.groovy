@@ -9,7 +9,16 @@ class Config8 {
                         openj9  : 'ci.project.openj9 && hw.arch.x86 && sw.os.osx.10_14'
                 ],
                 cleanWorkspaceAfterBuild: true,
-                test                 : 'default'
+                test                : [
+                        nightly: [
+                            'sanity.openjdk',
+                            'sanity.system',
+                            'extended.system',
+                            'sanity.perf',
+                            'sanity.functional',
+                            'extended.functional',
+                            'sanity.jck']
+                ]
         ],
 
         x64MacXL      : [
