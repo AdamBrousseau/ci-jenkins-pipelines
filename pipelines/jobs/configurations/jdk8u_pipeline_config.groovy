@@ -145,8 +145,7 @@ class Config8 {
                 test                : [
                         nightly: ['sanity.functional', 'sanity.openjdk']
                 ],
-                cleanWorkspaceAfterBuild: true,
-                test                 : 'default'
+                cleanWorkspaceAfterBuild: true
         ],
 
         x64LinuxXL       : [
