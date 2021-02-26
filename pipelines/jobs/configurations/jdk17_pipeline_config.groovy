@@ -4,9 +4,18 @@ class Config17 {
                 os                  : 'mac',
                 arch                : 'x64',
                 additionalNodeLabels: 'ci.project.openj9 && hw.arch.x86 && sw.os.osx.10_14',
-                test                : 'default',
                 cleanWorkspaceAfterBuild: true,
-                configureArgs       : '--enable-dtrace'
+                configureArgs       : '--enable-dtrace',
+                test                : [
+                        nightly: [
+                            'sanity.openjdk',
+                            'sanity.system',
+                            'extended.system',
+                            'sanity.perf',
+                            'sanity.functional',
+                            'extended.functional',
+                            'sanity.jck']
+                ]
         ],
 
         x64MacXL    : [
