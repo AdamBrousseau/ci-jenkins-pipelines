@@ -87,7 +87,7 @@ class Builder implements Serializable {
         'extended.perf',
         'special.functional',
         'sanity.external',
-        'sanity.jck'
+        'extended.jck'
     ]
 
     // Declare timeouts for each critical stage (unit is HOURS)
