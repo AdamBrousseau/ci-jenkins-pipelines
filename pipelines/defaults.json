@@ -1,9 +1,9 @@
 {
     "repository"             : {
         "build_url"          : "https://github.com/AdamBrousseau/openjdk-build.git",
-        "build_branch"       : "ibm_os",
+        "build_branch"       : "ibm_comm",
         "pipeline_url"       : "https://github.com/AdamBrousseau/ci-jenkins-pipelines.git",
-        "pipeline_branch"    : "ibm_os"
+        "pipeline_branch"    : "ibm_comm"
     },
     "jenkinsDetails"         : {
         "rootUrl"            : "https://hyc-runtimes-jenkins.swg-devops.com/",
@@ -32,5 +32,5 @@
         "downstream"         : "pipelines/build/common/openjdk_build_pipeline.groovy"
     },
     "importLibraryScript"    : "pipelines/build/common/import_lib.groovy",
-    "defaultsUrl"            : "https://raw.githubusercontent.com/AdamBrousseau/ci-jenkins-pipelines/ibm_os/pipelines/defaults.json"
+    "defaultsUrl"            : "https://raw.githubusercontent.com/AdamBrousseau/ci-jenkins-pipelines/ibm_comm/pipelines/defaults.json"
 }
