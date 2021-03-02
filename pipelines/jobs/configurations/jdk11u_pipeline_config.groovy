@@ -114,9 +114,9 @@ class Config11 {
                 ],
                 configureArgs       : [
                         "hotspot"     : '--enable-dtrace=auto',
-                        "openj9"      : '--enable-dtrace=auto --enable-jitserver'
-                ]
-
+                        "openj9"      : '--enable-dtrace=auto --enable-jitserver  --without-version-pre --without-version-opt --with-version-build=9 --with-vendor-name="IBM Corporation" --with-vendor-version-string="11.0.10.0-IBM" -with-vendor-url=https://www.ibm.com/ --with-vendor-bug-url=https://www.ibm.com/support/pages/java-sdk-support --with-vendor-vm-bug-url=https://www.ibm.com/support/pages/java-sdk-support --with-jdk-rc-name="IBM Java Platform"'
+                ],
+                buildArgs : "--ssh"
         ],
 
         arm32Linux    : [
