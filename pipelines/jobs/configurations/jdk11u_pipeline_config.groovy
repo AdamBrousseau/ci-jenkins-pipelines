@@ -190,7 +190,7 @@ class Config11 {
                 os                  : 'linux',
                 arch                : 'ppc64le',
                 additionalNodeLabels : 'centos7',
-                test                : 'default',
+                test                : false,
                 additionalNodeLabels: [
                         openj9:  'hw.arch.ppc64le && (sw.os.cent.7 || sw.os.rhel.7)'
                 ],
