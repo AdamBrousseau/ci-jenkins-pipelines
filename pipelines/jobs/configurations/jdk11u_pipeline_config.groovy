@@ -270,8 +270,7 @@ class Config11 {
                 dockerImage          : [
                         "openj9" : 'adoptopenjdk/centos6_build_image',
                 ],
-                dockerNode         : 'sw.tool.docker && sw.config.uid1000',
-
+                dockerNode          : 'sw.tool.docker && sw.config.uid1000',
                 crossCompile         : [
                         "openj9"     : 'x64'
                 ],
