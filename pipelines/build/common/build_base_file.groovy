@@ -71,7 +71,6 @@ class Builder implements Serializable {
         'sanity.openjdk',
         'sanity.system',
         'extended.system',
-        'sanity.perf',
         'sanity.functional',
         'extended.functional',
         'sanity.jck',
