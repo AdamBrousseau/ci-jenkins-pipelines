@@ -68,11 +68,6 @@ class Builder implements Serializable {
     nightly + weekly to be run during a 'release' pipeline
     */
     final List<String> nightly = [
-        'sanity.openjdk',
-        'sanity.system',
-        'extended.system',
-        'sanity.functional',
-        'extended.functional',
         'sanity.jck',
         'special.system'
     ]
