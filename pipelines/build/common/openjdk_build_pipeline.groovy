@@ -61,6 +61,9 @@ class Build {
     String vendorName = ""
     String buildSource = ""
     String crossCompileVersionPath = ""
+    String artifactsUrl = ""
+    String artifactoryCredential = ""
+    String artifactoryBaseUrl = ""
     Map variantVersion = [:]
 
     // Declare timeouts for each critical stage (unit is HOURS)
@@ -351,8 +354,10 @@ class Build {
                             context.build job: jobName,
                                     propagate: false,
                                     parameters: [
-                                            context.string(name: 'UPSTREAM_JOB_NUMBER', value: "${env.BUILD_NUMBER}"),
-                                            context.string(name: 'UPSTREAM_JOB_NAME', value: "${env.JOB_NAME}"),
+                                            //context.string(name: 'UPSTREAM_JOB_NUMBER', value: "${env.BUILD_NUMBER}"),
+                                            //context.string(name: 'UPSTREAM_JOB_NAME', value: "${env.JOB_NAME}"),
+                                            context.string(name: 'CUSTOMIZED_SDK_URL', value: artifactsUrl),
+                                            context.string(name: 'CUSTOMIZED_SDK_URL_CREDENTIAL_ID', value: artifactoryCredential),
                                             context.string(name: 'RELEASE_TAG', value: "${buildConfig.SCM_REF}"),
                                             context.string(name: 'JDK_REPO', value: jdkRepo),
                                             context.string(name: 'JDK_BRANCH', value: jdkBranch),
@@ -1118,6 +1123,7 @@ class Build {
 
                 // Always archive any artifacts including failed make logs..
                 try {
+                    /*
                     context.timeout(time: buildTimeouts.BUILD_ARCHIVE_TIMEOUT, unit: "HOURS") {
                         // We have already archived cross compiled artifacts, so only archive the metadata files
                         if (buildConfig.BUILD_ARGS.contains('--cross-compile')) {
@@ -1127,6 +1133,115 @@ class Build {
                             context.println "This is the main archive?"
                             context.archiveArtifacts artifacts: "workspace/target/*"
                         }
+                    }
+                    */
+                    // TODO Archive Artifactory ??
+
+                    //Archive to Artifactory
+                    context.timeout(time: buildTimeouts.BUILD_ARCHIVE_TIMEOUT, unit: "HOURS") {
+                        def artifactoryRepo = "sys-rt-generic-local"
+                        def artifactoryUploadDir = "${artifactoryRepo}/hyc-runtimes-jenkins.swg-devops.com/${context.JOB_NAME}/${context.BUILD_ID}/"
+                        def artifactPattern = "workspace/target/*"
+                        if (buildConfig.BUILD_ARGS.contains('--cross-compile')) {
+                            artifactPattern = "workspace/target/*.json"
+                        }
+                        def artifactList = context.sh (script:"ls ${artifactPattern}", returnStdout: true)
+                        def artifactArray = artifactList.tokenize()
+                        context.println artifactArray
+                        def specs = []
+                        def sdkSpec = ["pattern": artifactPattern,
+                                       "target": artifactoryUploadDir  // ${repo}/${JOB_NAME}/${BUILD_ID}
+                                       //"props": "build.buildIdentifier=${BUILD_IDENTIFIER}"
+                                    ]
+                        specs.add(sdkSpec)
+
+                        /*
+                            server:
+                                na: 'na.artifactory.swg-devops'
+                            repo:
+                                default: 'sys-rt-generic-local/hyc-runtimes-jenkins.swg-devops.com'
+                        */
+                        /*
+                        def testSpec = ["pattern": "${OPENJDK_CLONE_DIR}/${TEST_FILENAME}",
+                                        "target": "${ARTIFACTORY_CONFIG['uploadDir']}",
+                                        "props": "build.buildIdentifier=${BUILD_IDENTIFIER}"]
+                        specs.add(testSpec)
+                        def debugImageSpec = ["pattern": "${OPENJDK_CLONE_DIR}/${DEBUG_IMAGE_FILENAME}",
+                                        "target": "${ARTIFACTORY_CONFIG['uploadDir']}",
+                                        "props": "build.buildIdentifier=${BUILD_IDENTIFIER}"]
+                        specs.add(debugImageSpec)
+                        if (params.ARCHIVE_JAVADOC) {
+                            def javadocSpec = ["pattern": "${OPENJDK_CLONE_DIR}/${JAVADOC_FILENAME}",
+                                               "target": "${ARTIFACTORY_CONFIG['uploadDir']}",
+                                               "props": "build.buildIdentifier=${BUILD_IDENTIFIER}"]
+                            specs.add(javadocSpec)
+                            def javadocOpenJ9OnlySpec = ["pattern": "${OPENJDK_CLONE_DIR}/${JAVADOC_OPENJ9_ONLY_FILENAME}",
+                                                         "target": "${ARTIFACTORY_CONFIG['uploadDir']}",
+                                                         "props": "build.buildIdentifier=${BUILD_IDENTIFIER}"]
+                            specs.add(javadocOpenJ9OnlySpec)
+                        }
+                        */
+                        def uploadFiles = [files : specs]
+                        def uploadSpec = JsonOutput.toJson(uploadFiles)
+
+                        // upload
+
+                        def server = context.Artifactory.server "na.artifactory.swg-devops"
+                        // set connection timeout to 10 mins to avoid timeout on slow platforms
+                        //server.connection.timeout = 600
+
+                        def buildInfo = context.Artifactory.newBuildInfo()
+                        buildInfo.retention maxBuilds: 30, maxDays: 60, deleteBuildArtifacts: true
+                        // Add BUILD_IDENTIFIER to the buildInfo. The UploadSpec adds it to the Artifact info
+                        //buildInfo.env.filter.addInclude("BUILD_IDENTIFIER")
+                        //buildInfo.env.capture = true
+
+                        server.upload spec: uploadSpec, buildInfo: buildInfo;
+                        server.publishBuildInfo buildInfo
+
+                        // https://stackoverflow.com/questions/59471011/get-artifacts-url-after-rtupload-in-jenkins-pipeline
+                        /*
+                            node {
+                                def server = Artifactory.server SERVER_ID
+                                def uploadSpec = readFile 'uploadSpec.json'
+                                def buildInfo = server.upload spec: uploadSpec
+
+                                if (buildInfo.getArtifacts().size() > 0) {
+                                    def localPath = buildInfo.getArtifacts()[0].getLocalPath()
+                                    def remotePath = buildInfo.getArtifacts()[0].getRemotePath()
+                                    def md5 = buildInfo.getArtifacts()[0].getMd5()
+                                    def sha1 = buildInfo.getArtifacts()[0].getSha1()
+                                    echo remotePath
+                                }
+
+                                server.publishBuildInfo buildInfo
+                            }
+                            // https://140-211-168-230-openstack.osuosl.org/artifactory/ci-eclipse-openj9/Build_JDK11_ppc64_aix_Personal/949/OpenJ9-JDK11-ppc64_aix-20210409-084110.tar.gz https://140-211-168-230-openstack.osuosl.org/artifactory/ci-eclipse-openj9/Build_JDK11_ppc64_aix_Personal/949/test-images.tar.gz
+                        */
+                        artifactoryBaseUrl = server.getUrl() + '/' + artifactoryRepo
+                        artifactoryCredential = server.getCredentialsId()
+
+                        //env.artifactorySdkUrl = "${artifactoryBaseUrl}/${artifactoryUploadDir}/${SDK_FILENAME}"
+                        //env.artifactoryDebugImagesUrl = "${artifactoryBaseUrl}/${artifactoryUploadDir}/${debug_FILENAME}"
+                        //env.artifactoryTestImagesUrl = "${artifactoryBaseUrl}/${artifactoryUploadDir}/${test_FILENAME}"
+                        if (buildInfo.getArtifacts().size() > 0) {
+                            def allArtifacts = buildInfo.getArtifacts()
+                            context.println "All artifacts:${allArtifacts}"
+                            for (def artifact in buildInfo.getArtifacts()) {
+                                context.println(artifact.getRemotePath())
+                                context.println(artifact.getLocalPath())
+                                context.println(artifact.getMd5())
+                                context.println(artifact.getSha1())
+                                if ((artifact.getRemotePath().contains(".tar.gz") || artifact.getRemotePath().contains(".zip")) && !artifact.getRemotePath().contains(".json")) {
+                                    artifactsUrl += " " + artifactoryBaseUrl + '/' + artifact.getRemotePath()
+                                }
+                            }
+                            context.println "ArtifactsUrl:${artifactsUrl}"
+                            context.currentBuild.description += "<br><a href=Artifacts>${artifactsUrl}</a>"
+                        } else {
+                            context.println "Appears nothing will be uploaded to Artifactory"
+                        }
+
                     }
                 } catch (FlowInterruptedException e) {
                     // Set Github Commit Status
@@ -1422,11 +1537,11 @@ class Build {
                         throw new Exception("[ERROR] Sign job timeout (${buildTimeouts.SIGN_JOB_TIMEOUT} HOURS) has been reached OR the downstream sign job failed. Exiting...")
                     }
                 }
-                
+
                 // Run Smoke Tests and AQA Tests
                 if (enableTests) {
                     try {
-                        runSmokeTests()
+                        //runSmokeTests()
                         if (buildConfig.TEST_LIST.size() > 0) {
                             def testStages = runAQATests()
                             context.parallel testStages
