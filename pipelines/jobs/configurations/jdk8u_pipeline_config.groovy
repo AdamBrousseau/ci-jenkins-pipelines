@@ -75,7 +75,10 @@ class Config8 {
         s390xLinux    : [
                 os  : 'linux',
                 arch: 's390x',
-                test                 : 'default'
+                test                 : [
+                        openj9: 'default',
+                        hotspot: 'sanity.openjdk'
+                ]
         ],
 
         sparcv9Solaris: [

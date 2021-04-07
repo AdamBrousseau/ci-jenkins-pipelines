@@ -114,7 +114,7 @@ class Builder implements Serializable {
             buildArgs += " " + additionalBuildArgs
         }
 
-        def testList = getTestList(platformConfig)
+        def testList = getTestList(platformConfig, variant)
 
         def platformCleanWorkspaceAfterBuild = getCleanWorkspaceAfterBuild(platformConfig)
 
@@ -197,7 +197,7 @@ class Builder implements Serializable {
     Get the list of tests to run from the build configurations.
     We run different test categories depending on if this build is a release or nightly. This function parses and applies this to the individual build config.
     */
-    List<String> getTestList(Map<String, ?> configuration) {
+    List<String> getTestList(Map<String, ?> configuration,  variant) {
         final List<String> nightly = DEFAULTS_JSON["testDetails"]["nightlyDefault"]
         final List<String> weekly = DEFAULTS_JSON["testDetails"]["weeklyDefault"]
         List<String> testList = []
@@ -213,7 +213,10 @@ class Builder implements Serializable {
             }
 
             if (isMap(configuration.test)) {
-
+                Map<String, ?> testMap = configuration.test as Map<String, ?>
+                if (testMap.containsKey(variant)) {
+                    
+                }
                 if ( testJobType == "nightly" ) {
                     testList = (configuration.test as Map).get("nightly") as List<String>
                 } else {
