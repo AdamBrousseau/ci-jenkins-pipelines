@@ -1559,7 +1559,18 @@ class Build {
                         artifactoryBaseUrl = server.getUrl() + '/' + artifactoryRepo
                         artifactoryCredential = server.getCredentialsId()
 
-                        if (buildInfo.getArtifacts().size() > 0) {
+                        context.println buildInfo
+                        context.println buildInfo.getArtifacts()
+                        context.println buildInfo.getName()
+                        context.println buildInfo.getNumber()
+                        context.println buildInfo.getProject()
+                        context.println buildInfo.getStartDate()
+                        context.println buildInfo.getDependencies()
+                        context.println buildInfo.getEnv()
+                        context.println buildInfo.getRetention()
+                        context.currentBuild.description += "<br>Adam"
+                        if (true) {
+                        //if (buildInfo.getArtifacts().size() > 0) {
                             for (def artifact in buildInfo.getArtifacts()) {
                                 if ((artifact.getRemotePath().contains(".tar.gz") || artifact.getRemotePath().contains(".zip")) && !artifact.getRemotePath().contains(".json")) {
                                     def artifactUrl = artifactoryBaseUrl + '/' + artifact.getRemotePath()
