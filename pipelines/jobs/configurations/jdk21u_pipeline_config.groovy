@@ -45,7 +45,7 @@ class Config21 {
                         'temurin'   : '--enable-dtrace'
                 ],
                 buildArgs           : [
-                        'openj9'    : '--create-jre-image --ssh',
+                        'openj9'    : '--create-jre-image --ssh --use-adoptium-devkit gcc-11.3.0-Centos7.9.2009-b03',
                         'temurin'   : '--create-source-archive --create-jre-image --create-sbom --enable-sbom-strace --use-adoptium-devkit gcc-11.3.0-Centos7.9.2009-b03'
                 ]
         ],
