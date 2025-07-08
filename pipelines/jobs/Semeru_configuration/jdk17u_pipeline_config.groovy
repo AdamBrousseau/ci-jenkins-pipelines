@@ -21,9 +21,9 @@ class Config17 {
                 arch                : 'x64',
                 dockerImage: [
                         temurin     : 'adoptopenjdk/centos6_build_image',
-                        openj9      : 'ghcr.io/adoptium/adoptium_build_image:centos7'
+                        openj9      : 'sys-rt-docker-local/semeru/centos7_build_image:337'
                 ],
-                dockerRegistry: 'https://ghcr.io/',
+                dockerRegistry: 'https://docker-na.artifactory.swg-devops.com/',
                 dockerCredential    : 'f5a0bd2f-093e-41ea-bd6f-875936334a63',
                 additionalNodeLabels : 'ci.project.openj9 && hw.arch.x86 && sw.os.linux',
                 dockerFile: [
